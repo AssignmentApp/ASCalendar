@@ -13,6 +13,7 @@ struct WeekEventsLayout: Layout {
     var startAt: Date
     var endAt: Date
     var spacing: CGFloat
+    var titleSpcaing: CGFloat
     var dateCellConfig: ASCalendarConfiguration.DateCellConfiguration
     var eventCellConfig: ASCalendarConfiguration.EventCellConfiguration
     
@@ -68,7 +69,7 @@ struct WeekEventsLayout: Layout {
         for line in lines {
             for cell in line.cells {
                 cell.subview.place(at: CGPoint(x: bounds.minX+cell.position.x, 
-                                               y: bounds.minY+dateCellConfig.titleHeight+(spacing+eventCellConfig.height)*CGFloat(line.line)),
+                                               y: bounds.minY+dateCellConfig.titleHeight+titleSpcaing+(spacing+eventCellConfig.height)*CGFloat(line.line)),
                                    anchor: .topLeading,
                                    proposal: ProposedViewSize(cell.size))
             }

@@ -79,6 +79,7 @@ struct WeekEvents: View {
     var body: some View {
         WeekEventsLayout(startAt: startAt, endAt: endAt,
                          spacing: configuration.eventCell.spacing,
+                         titleSpcaing: configuration.titleSpacing,
                          dateCellConfig: configuration.dateCell,
                          eventCellConfig: configuration.eventCell) {
             ForEach(weekEvents) { event in
