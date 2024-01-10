@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MonthView: View {
+public struct ASCalendarView: View {
     @Environment(\.calendar) private var calendar
     @Environment(\.calendarConfiguration) private var configuration
     var month: Date
@@ -49,7 +49,7 @@ struct MonthView: View {
         var isSameMonth: Bool
     }
     
-    var body: some View {
+    public var body: some View {
         ZStack {
             WeekLines(month: month, calendarEvents: events)
             GeometryReader { proxy in
@@ -70,7 +70,7 @@ struct MonthView: View {
 
 
 #Preview {
-    MonthView(month: .now, 
+    ASCalendarView(month: .now,
               events: [ .init(startAt: .now, endAt: .now.addingTimeInterval(86400*5), title: "Test", color: .red),
                         .init(startAt: .now.addingTimeInterval(86400), endAt: .now.addingTimeInterval(86400*2), title: "Test2", color: .blue) ], 
               onSelect: { _ in })

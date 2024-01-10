@@ -11,7 +11,7 @@ import SwiftUI
 struct CalendarCell: View {
     @Environment(\.calendarConfiguration) private var configuration
     @Environment(\.calendar) private var calendar
-    var date: MonthView.CalendarDate
+    var date: ASCalendarView.CalendarDate
     
     private var isSunday: Bool {
         date.date.weekday == 1
@@ -34,7 +34,7 @@ struct CalendarCell: View {
         }
     }
     
-    init(date: MonthView.CalendarDate) {
+    init(date: ASCalendarView.CalendarDate) {
         self.date = date
     }
     
