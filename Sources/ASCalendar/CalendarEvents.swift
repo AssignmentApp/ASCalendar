@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  SwiftUIView.swift
 //  
 //
 //  Created by Lee Jaeho on 1/10/24.
@@ -7,10 +7,11 @@
 
 import SwiftUI
 
-struct WeekLines: View {
+struct CalendarEvents: View {
+    @Environment(\.ascalendarConfiguration) private var configuration
     @Environment(\.calendar) private var calendar
     var month: Date
-    var calendarEvents: [CalendarEvent]
+    var events: [ASCalendarEvent]
     
     private var monthDates: [Date] {
         guard let startOfMonth = calendar.date(from: calendar.dateComponents([.calendar, .year, .month], from: month)),
@@ -39,53 +40,54 @@ struct WeekLines: View {
         let minDates = monthDates.filter { $0.weekday == 1 }
         let maxDates = monthDates.filter { $0.weekday == 7 }
         for (minDate, maxDate) in zip(minDates, maxDates) {
-            lines.append(LineData(minDate: minDate, maxDate: maxDate))
+            lines.append(LineData(startAt: minDate, endAt: maxDate))
         }
-        lines.sort(by: { $0.minDate < $1.minDate })
+        lines.sort(by: { $0.startAt < $1.startAt })
         return lines
     }
     
     private struct LineData: Identifiable {
         var id: UUID = UUID()
-        var minDate: Date
-        var maxDate: Date
+        var startAt: Date
+        var endAt: Date
     }
     
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: configuration.spacing) {
             ForEach(lineDatas) { line in
-                WeekLine(minDate: line.minDate, maxDate: line.maxDate, calendarEvents: calendarEvents)
+                WeekEvents(events: events,
+                               startAt: line.startAt,
+                               endAt: line.endAt)
                     .frame(maxHeight: .infinity, alignment: .top)
             }
         }
     }
 }
 
-fileprivate struct WeekLine: View {
-    @Environment(\.calendarConfiguration) private var configuration
-    var calendarEvents: [CalendarEvent]
-    var minDate: Date
-    var maxDate: Date
+struct WeekEvents: View {
+    @Environment(\.ascalendarConfiguration) private var configuration
+    var events: [ASCalendarEvent]
+    var startAt: Date
+    var endAt: Date
     
-    init(minDate: Date, maxDate: Date, calendarEvents: [CalendarEvent]) {
-        self.minDate = minDate
-        self.maxDate = maxDate
-        self.calendarEvents = calendarEvents
+    private var weekEvents: [ASCalendarEvent] {
+        events.filter { event in
+            (event.startAt <= endAt && event.endAt >= startAt) || (event.startAt >= startAt && event.endAt <= endAt)
+        }
     }
     
     var body: some View {
-        CalendarLineLayout(minDate: minDate, maxDate: maxDate,
-                           titleHeight: configuration.dateCell.titleHeight + configuration.titleSpacing,
-                           cellHeight: configuration.eventCell.height, spacing: configuration.eventCell.spacing) {
-            ForEach(calendarEvents.filter { event in
-                (event.startAt <= maxDate && event.endAt >= minDate) || (event.startAt >= minDate && event.endAt <= maxDate)
-            }) { event in
+        WeekEventsLayout(startAt: startAt, endAt: endAt,
+                         spacing: configuration.eventCell.spacing,
+                         dateCellConfig: configuration.dateCell,
+                         eventCellConfig: configuration.eventCell) {
+            ForEach(weekEvents) { event in
                 Text(event.title)
                     .font(configuration.eventCell.font)
                     .frame(maxWidth: .infinity, maxHeight: configuration.eventCell.height)
                     .background(.tertiary, in: RoundedRectangle(cornerRadius: configuration.eventCell.cornerRadius))
-                    .foregroundStyle(event.color)
-                    .calendarLayout(startAt: event.startAt, endAt: event.endAt)
+                    .foregroundStyle(Color(hex: event.hexColor))
+                    .eventDate(startAt: event.startAt, endAt: event.endAt)
             }
         }
     }

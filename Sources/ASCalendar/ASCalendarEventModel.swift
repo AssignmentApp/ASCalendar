@@ -6,19 +6,18 @@
 //
 
 import Foundation
-import SwiftUI
 
-public struct CalendarEvent: Identifiable {
+public struct ASCalendarEvent: Identifiable {
     public var id: UUID = UUID()
     var startAt: Date
     var endAt: Date
     var title: String
-    var color: Color
+    var hexColor: String
     
-    public init(startAt: Date, endAt: Date, title: String, color: Color) {
+    public init(startAt: Date, endAt: Date, title: String, color: String) {
         self.startAt = startAt
         self.endAt = endAt
         self.title = title
-        self.color = color
+        self.hexColor = color
     }
 }

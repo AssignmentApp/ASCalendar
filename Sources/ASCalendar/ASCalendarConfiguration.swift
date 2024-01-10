@@ -11,13 +11,13 @@ import SwiftUI
 public struct ASCalendarConfiguration {
     
     /// 이벤트 타이틀과 이벤트 셀 사이의 공간
-    var titleSpacing: CGFloat
+    public var titleSpacing: CGFloat
     
-    var spacing: CGFloat
+    public var spacing: CGFloat
     
-    var eventCell: EventCellConfiguration
+    public var eventCell: EventCellConfiguration
     
-    var dateCell: DateCellConfiguration
+    public var dateCell: DateCellConfiguration
     
     /// 이벤트셀 설정
     public struct EventCellConfiguration {
@@ -58,13 +58,13 @@ public struct ASCalendarConfiguration {
     }
 }
 
-public struct CalendarConfigurationEnvironmentKey: EnvironmentKey {
+public struct ASCalendarConfigurationEnvironmentKey: EnvironmentKey {
     static public var defaultValue: ASCalendarConfiguration = ASCalendarConfiguration()
 }
 
 public extension EnvironmentValues {
-    var calendarConfiguration: ASCalendarConfiguration {
-        get { self[CalendarConfigurationEnvironmentKey.self] }
-        set { self[CalendarConfigurationEnvironmentKey.self] = newValue }
+    var ascalendarConfiguration: ASCalendarConfiguration {
+        get { self[ASCalendarConfigurationEnvironmentKey.self] }
+        set { self[ASCalendarConfigurationEnvironmentKey.self] = newValue }
     }
 }

@@ -8,10 +8,10 @@
 import Foundation
 import SwiftUI
 
-struct CalendarCell: View {
-    @Environment(\.calendarConfiguration) private var configuration
+struct ASCalendarCell: View {
+    @Environment(\.ascalendarConfiguration) private var configuration
     @Environment(\.calendar) private var calendar
-    var date: ASCalendarView.CalendarDate
+    var date: ASCalendar.CalendarDate
     
     private var isSunday: Bool {
         date.date.weekday == 1
@@ -34,7 +34,7 @@ struct CalendarCell: View {
         }
     }
     
-    init(date: ASCalendarView.CalendarDate) {
+    init(date: ASCalendar.CalendarDate) {
         self.date = date
     }
     
