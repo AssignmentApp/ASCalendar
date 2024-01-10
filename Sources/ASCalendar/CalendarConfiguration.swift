@@ -58,11 +58,11 @@ public struct ASCalendarConfiguration {
     }
 }
 
-struct CalendarConfigurationEnvironmentKey: EnvironmentKey {
-    static var defaultValue: ASCalendarConfiguration = ASCalendarConfiguration()
+public struct CalendarConfigurationEnvironmentKey: EnvironmentKey {
+    static public var defaultValue: ASCalendarConfiguration = ASCalendarConfiguration()
 }
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     var calendarConfiguration: ASCalendarConfiguration {
         get { self[CalendarConfigurationEnvironmentKey.self] }
         set { self[CalendarConfigurationEnvironmentKey.self] = newValue }
