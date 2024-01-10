@@ -84,6 +84,7 @@ struct WeekEvents: View {
                          eventCellConfig: configuration.eventCell) {
             ForEach(weekEvents) { event in
                 Text(event.title)
+                    .lineLimit(1)
                     .font(configuration.eventCell.font)
                     .frame(maxWidth: .infinity, maxHeight: configuration.eventCell.height)
                     .background(.tertiary, in: RoundedRectangle(cornerRadius: configuration.eventCell.cornerRadius))
