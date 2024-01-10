@@ -34,7 +34,7 @@ struct WeekEventsLayout: Layout {
             }
             
             func isPositionContained(position point: CGPoint) -> Bool {
-                position.x <= point.x && point.x <= maxX
+                position.x < point.x && point.x < maxX
             }
         }
     }
