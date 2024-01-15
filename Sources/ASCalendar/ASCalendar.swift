@@ -57,6 +57,7 @@ public struct ASCalendar: View {
                         Button(action: { onSelect(date.date) }) {
                             ASCalendarCell(date: date)
                                 .frame(minHeight: max(0, cellHeight), alignment: .top)
+                                .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
                     }
