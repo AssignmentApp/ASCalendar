@@ -49,7 +49,9 @@ public struct ASCalendar: View {
     
     public var body: some View {
         ZStack {
-            CalendarEvents(month: month, events: events)
+            if !events.isEmpty {
+                CalendarEvents(month: month, events: events)
+            }
             GeometryReader { proxy in
                 let cellHeight = (proxy.size.height-configuration.spacing*5)/6
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(minimum: configuration.dateCell.minimumWidth, maximum: .infinity), spacing: 0), count: 7), spacing: configuration.spacing) {
