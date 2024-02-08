@@ -28,7 +28,7 @@ struct ASCalendarCell: View {
         } else if isSunday {
             Color.red
         } else if isSaturday {
-            Color.blue
+            Color.secondary
         } else {
             Color.primary
         }
