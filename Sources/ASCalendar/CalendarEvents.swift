@@ -10,54 +10,35 @@ import SwiftUI
 struct CalendarEvents: View {
     @Environment(\.ascalendarConfiguration) private var configuration
     @Environment(\.calendar) private var calendar
-    var month: Date
+    var dates: [Date]
     var events: [ASCalendarEvent]
     
-    private var monthDates: [Date] {
-        guard let startOfMonth = calendar.date(from: calendar.dateComponents([.calendar, .year, .month], from: month)),
-              let nextMonth = calendar.date(byAdding: .month, value: 1, to: startOfMonth),
-              let endOfMonth = calendar.date(byAdding: .day, value: -1, to: nextMonth),
-              let startDate = calendar.date(byAdding: .day, value: -startOfMonth.weekday, to: startOfMonth),
-              let endDate = calendar.date(byAdding: .day, value: 42-calendar.dateComponents([.day], from: startDate, to: endOfMonth).day!, to: endOfMonth) else { return [] }
-        
-        var dates: [Date] = []
-        calendar.enumerateDates(startingAfter: startDate,
-                                matching: DateComponents(hour: 0, minute: 0),
-                                matchingPolicy: .nextTime,
-                                using: { date, _, isEnd in
-            if let date {
-                if date <= endDate {
-                    dates.append(date)
-                } else {
-                    isEnd = true
-                }
-            }
-        })
-        return dates
-    }
     private var lineDatas: [LineData] {
         var lines: [LineData] = []
-        let minDates = monthDates.filter { $0.weekday == 1 }
-        let maxDates = monthDates.filter { $0.weekday == 7 }
+        let minDates = dates.filter { $0.weekday == 1 }
+        let maxDates = dates.filter { $0.weekday == 7 }
         for (minDate, maxDate) in zip(minDates, maxDates) {
-            lines.append(LineData(startAt: minDate, endAt: maxDate))
+            lines.append(LineData(startAt: minDate, 
+                                  endAt: maxDate,
+                                  events: events.filter { event in
+                (event.startAt <= maxDate && event.endAt >= minDate) || (event.startAt >= minDate && event.endAt <= maxDate)
+            }))
         }
         lines.sort(by: { $0.startAt < $1.startAt })
         return lines
     }
     
-    private struct LineData: Identifiable {
+    struct LineData: Identifiable {
         var id: UUID = UUID()
         var startAt: Date
         var endAt: Date
+        var events: [ASCalendarEvent]
     }
     
     var body: some View {
         VStack(spacing: configuration.spacing) {
             ForEach(lineDatas) { line in
-                WeekEvents(events: events,
-                               startAt: line.startAt,
-                               endAt: line.endAt)
+                WeekEvents(weekData: line)
                     .frame(maxHeight: .infinity, alignment: .top)
             }
         }
@@ -66,23 +47,15 @@ struct CalendarEvents: View {
 
 struct WeekEvents: View {
     @Environment(\.ascalendarConfiguration) private var configuration
-    var events: [ASCalendarEvent]
-    var startAt: Date
-    var endAt: Date
-    
-    private var weekEvents: [ASCalendarEvent] {
-        events.filter { event in
-            (event.startAt <= endAt && event.endAt >= startAt) || (event.startAt >= startAt && event.endAt <= endAt)
-        }
-    }
+    var weekData: CalendarEvents.LineData
     
     var body: some View {
-        WeekEventsLayout(startAt: startAt, endAt: endAt,
+        WeekEventsLayout(startAt: weekData.startAt, endAt: weekData.endAt,
                          spacing: configuration.eventCell.spacing,
                          titleSpcaing: configuration.titleSpacing,
                          dateCellConfig: configuration.dateCell,
                          eventCellConfig: configuration.eventCell) {
-            ForEach(weekEvents) { event in
+            ForEach(weekData.events) { event in
                 Text(event.title)
                     .lineLimit(1)
                     .font(configuration.eventCell.font)

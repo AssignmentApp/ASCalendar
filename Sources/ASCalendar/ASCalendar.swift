@@ -50,7 +50,7 @@ public struct ASCalendar: View {
     public var body: some View {
         ZStack {
             if !events.isEmpty {
-                CalendarEvents(month: month, events: events)
+                CalendarEvents(dates: dates.map { $0.date }, events: events)
             }
             GeometryReader { proxy in
                 let cellHeight = (proxy.size.height-configuration.spacing*5)/6
