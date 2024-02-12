@@ -28,7 +28,7 @@ struct ASCalendarCell: View {
         } else if isSunday {
             Color.red
         } else if isSaturday {
-            Color.secondary
+            Color.gray
         } else {
             Color.primary
         }
@@ -43,6 +43,8 @@ struct ASCalendarCell: View {
             Text(String(date.date.day))
                 .font(configuration.dateCell.font)
                 .frame(height: configuration.dateCell.titleHeight)
+                .foregroundStyle(date.isSameMonth ? .primary : .tertiary)
+                .foregroundStyle(fontColor)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background {
@@ -50,7 +52,5 @@ struct ASCalendarCell: View {
                 .foregroundStyle(.fill)
                 .opacity(isToday ? 0.3 : 0)
         }
-        .foregroundStyle(date.isSameMonth ? .primary : .tertiary)
-        .foregroundStyle(fontColor)
     }
 }
