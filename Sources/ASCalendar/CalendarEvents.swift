@@ -21,7 +21,9 @@ struct CalendarEvents: View {
             lines.append(LineData(startAt: minDate, 
                                   endAt: maxDate,
                                   events: events.filter { event in
-                (event.startAt <= maxDate && event.endAt >= minDate) || (event.startAt >= minDate && event.endAt <= maxDate)
+                guard let nextDate = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: maxDate)) else { return false }
+                
+                return (event.startAt <= nextDate && event.endAt >= minDate)
             }))
         }
         lines.sort(by: { $0.startAt < $1.startAt })
